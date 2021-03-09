@@ -1,0 +1,17 @@
+{
+  "name": "reply-2021",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "zip": "bestzip code.zip ./"
+  },
+  "keywords": [],
+  "author": "Konrad Linkowski",
+  "license": "MIT",
+  "dependencies": {
+    "bestzip": "^2.1.7",
+    "yargs": "^16.2.0"
+  }
+}
