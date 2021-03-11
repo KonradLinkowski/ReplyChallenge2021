@@ -6,7 +6,7 @@ const { input } = yargs(hideBin(process.argv))
 
 const { load } = require('./loader')
 const { parse } = require('./parser')
-const { compute } = require('./compute')
+const { Computer } = require('./computer')
 const { print } = require('./printer')
 
 main().catch(error => {
@@ -16,7 +16,8 @@ main().catch(error => {
 
 async function main() {
   const file = await load(input)
-  const data = parse(file)
-  const grid = compute(data)
+  const grid = parse(file)
+  const computer = new Computer(grid)
+  computer.compute()
   print(input, grid)
 }
