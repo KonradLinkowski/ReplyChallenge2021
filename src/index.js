@@ -18,6 +18,7 @@ async function main() {
   const file = await load(input)
   const grid = parse(file)
   const computer = new Computer(grid)
-  computer.compute()
-  print(input, grid)
+  const { best, score } = computer.compute(10000)
+  console.log(score)
+  print(input, best)
 }

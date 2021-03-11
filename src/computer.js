@@ -1,10 +1,25 @@
+const GeneticAlgorithmConstructor = require('geneticalgorithm')
+
 class Computer {
   constructor(grid) {
     this.grid = grid
+    
+    this.genetic = GeneticAlgorithmConstructor({
+      mutationFunction: this.mutate.bind(this),
+      crossoverFunction: this.crossover.bind(this),
+      fitnessFunction: this.fitness.bind(this),
+      population: [ this.seed() ],
+    })
   }
 
-  compute() {
-    
+  compute(populationSize) {
+    this.genetic.evolve({
+      populationSize
+    })
+    return {
+      best: this.genetic.best(),
+      score: this.genetic.bestScore()
+    }
   }
 
   seed() {
@@ -17,13 +32,12 @@ class Computer {
   }
 
   mutate(antennas) {
-    return antennas.map(antenna => {
-      const a = antenna.clone()
+    return antennas.map(a => {
       let x = null
       let y = null
       do {
-        y = antenna.y + Math.floor(Math.random() * this.grid.height)
-        x = antenna.x + Math.floor(Math.random() * this.grid.width)
+        y = a.y + Math.floor(Math.random() * this.grid.height)
+        x = a.x + Math.floor(Math.random() * this.grid.width)
       } while(!this.inConstrains(x, y))
       a.x = x
       a.y = y
@@ -38,25 +52,34 @@ class Computer {
     const f1 = father.filter((_, i) => i % 2 == 1)
 
     return [
-      [m0.map(a => a.clone()), m1.map(a => a.clone())],
-      [f0.map(a => a.clone()), f1.map(a => a.clone())]
+      [...m0, ...m1],
+      [...f0, ...f1]
     ]
   }
 
   inConstrains(x, y) {
-    return x >= 0 && x < this.grid.width && y >= 0 && y <= this.grid.height
+    return x >= 0 && x < this.grid.width && y >= 0 && y < this.grid.height
+  }
+
+  fitness(antennas) {
+    const score = this.calculateScore({
+      antennas,
+      buildings: this.grid.buildings,
+      reward: this.grid.reward
+    })
+    return score
   }
   
-  calculateScore() {
+  calculateScore({ antennas, buildings, reward }) {
     let sum = 0
     let allConnected = true
-    for (const b of this.grid.buildings) {
-      let bestScore = Number.NEGATIVE_INFINITY
-      for (const a of this.grid.antennas) {
-        const dist = calculateDistance(a.x, a.y, b.x, b.y)
+    for (const b of buildings) {
+      let bestScore = 0
+      for (const a of antennas) {
+        const dist = this.calculateDistance(a.x, a.y, b.x, b.y)
         if (dist > a.range) {
           allConnected = false
-          return
+          continue
         }
         const score = b.speed * a.speed - b.latency * dist
         if (score > bestScore) {
@@ -64,15 +87,16 @@ class Computer {
         }
       }
       sum += bestScore
-      if (allConnected) {
-        sum += this.grid.reward
-      }
+     
     }
-    return sum
+    if (allConnected) {
+      sum += reward
+    }
+    return sum || 0
   }
 
-  calculateDistance(x1, x2, y1, y2) {
-    return Math.abs(x2 - x1) + (y2 - y1)
+  calculateDistance(x1, y1, x2, y2) {
+    return Math.abs(x2 - x1) + Math.abs(y2 - y1)
   }
 }
 
