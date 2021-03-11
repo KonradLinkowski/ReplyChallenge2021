@@ -14,12 +14,9 @@ class Computer {
   }
 
   compute(iterations) {
-    for (let i = 0; i < iterations; i += 1) {
-      this.genetic.evolve()
-    }
+    const best =this.seed() 
     return {
-      best: this.genetic.best(),
-      score: this.genetic.bestScore()
+      best
     }
   }
 
