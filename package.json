@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "zip": "bestzip code.zip ./",
+    "zip": "rm -f code.zip && bestzip code.zip ./src ./package.json ./package-lock.json",
     "all": "bash ./run_all.sh"
   },
   "keywords": [],
