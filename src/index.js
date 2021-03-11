@@ -15,4 +15,5 @@ main().catch(error => {
 async function main() {
   const file = await load(input)
   const data = parse(file)
+  console.log(data)
 }
