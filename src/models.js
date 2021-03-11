@@ -3,6 +3,12 @@ class Antenna {
     this.id = id
     this.range = range
     this.speed = speed
+    this.x = null
+    this.y = null
+  }
+
+  clone() {
+    return new Antenna(this.id, this.range, this.speed)
   }
 }
 
@@ -13,6 +19,10 @@ class Building {
     this.latency = latency
     this.speed = speed
   }
+
+  clone() {
+    return new Building(this.x, this.y, this.latency, this.speed)
+  }
 }
 
 class Grid {
@@ -22,6 +32,12 @@ class Grid {
     this.antennas = antennas
     this.buildings = buildings
     this.reward = reward
+  }
+
+  clone() {
+    const newAntennas = this.antennas.map(a => a.clone())
+    const newBuildings = this.buildings.map(b => b.clone())
+    return new Grid(this.width, this.height, newAntennas, newBuildings, this.reward)
   }
 }
 

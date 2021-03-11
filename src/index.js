@@ -6,6 +6,8 @@ const { input } = yargs(hideBin(process.argv))
 
 const { load } = require('./loader')
 const { parse } = require('./parser')
+const { compute } = require('./compute')
+const { print } = require('./printer')
 
 main().catch(error => {
   console.error('Critical error occured', error)
@@ -15,5 +17,6 @@ main().catch(error => {
 async function main() {
   const file = await load(input)
   const data = parse(file)
-  console.log(data)
+  const grid = compute(data)
+  print(input, grid)
 }
