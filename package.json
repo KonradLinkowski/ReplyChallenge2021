@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "zip": "bestzip code.zip ./"
+    "zip": "bestzip code.zip ./",
+    "all": "bash ./run_all.sh"
   },
   "keywords": [],
   "author": "Konrad Linkowski",
