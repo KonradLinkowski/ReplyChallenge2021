@@ -8,14 +8,15 @@ class Computer {
       mutationFunction: this.mutate.bind(this),
       crossoverFunction: this.crossover.bind(this),
       fitnessFunction: this.fitness.bind(this),
-      population: [ this.seed() ],
+      population: Array(10).fill(0).map(() => this.seed()),
+      populationSize: 10
     })
   }
 
-  compute(populationSize) {
-    this.genetic.evolve({
-      populationSize
-    })
+  compute(iterations) {
+    for (let i = 0; i < iterations; i += 1) {
+      this.genetic.evolve()
+    }
     return {
       best: this.genetic.best(),
       score: this.genetic.bestScore()
