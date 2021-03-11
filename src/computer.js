@@ -46,6 +46,34 @@ class Computer {
   inConstrains(x, y) {
     return x >= 0 && x < this.grid.width && y >= 0 && y <= this.grid.height
   }
+  
+  calculateScore() {
+    let sum = 0
+    let allConnected = true
+    for (const b of this.grid.buildings) {
+      let bestScore = Number.NEGATIVE_INFINITY
+      for (const a of this.grid.antennas) {
+        const dist = calculateDistance(a.x, a.y, b.x, b.y)
+        if (dist > a.range) {
+          allConnected = false
+          return
+        }
+        const score = b.speed * a.speed - b.latency * dist
+        if (score > bestScore) {
+          bestScore = score
+        }
+      }
+      sum += bestScore
+      if (allConnected) {
+        sum += this.grid.reward
+      }
+    }
+    return sum
+  }
+
+  calculateDistance(x1, x2, y1, y2) {
+    return Math.abs(x2 - x1) + (y2 - y1)
+  }
 }
 
 module.exports = {
